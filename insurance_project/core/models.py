@@ -11,10 +11,13 @@ class Customer(models.Model):
     email = models.EmailField(unique=True, blank=False, null=False)
     phone = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.full_name
+
 
 class Car(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    vin = models.PositiveIntegerField(unique=True, blank=True, null=True)
+    vin = models.CharField(max_length=17, unique=True)
     model = models.CharField(max_length=20)
     year = models.PositiveIntegerField(validators=[
         MinValueValidator(1950),
@@ -35,7 +38,7 @@ class InsurancePolicy(models.Model):
     premium = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
-    status = models.CharField(max_length=3, choices=STATUS)
+    status = models.CharField(max_length=3, choices=STATUS, default="AE")
 
     def one_police_validation(self):
         """
@@ -59,7 +62,7 @@ class InsurancePolicy(models.Model):
         """
         current_year = datetime.now().year
 
-        if current_year - self.car.year >= 3:
+        if current_year - self.car.year <= 3:
             coefficient = 0.05
         elif 4 <= current_year - self.car.year <= 10:
             coefficient = 0.08
