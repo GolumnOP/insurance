@@ -46,16 +46,7 @@ class InsurancePolicySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         car = validated_data.pop("car_id")
 
-        age = datetime.datetime.now().year - car.year
-        if age <= 3:
-            coefficient = 0.05
-        elif 4 <= age <= 10:
-            coefficient = 0.08
-        else:
-            coefficient = 0.12
-
-        validated_data["premium"] = validated_data["coverage_amount"] * coefficient
         validated_data["car"] = car
-        validated_data["status"] = "AE"
+        # validated_data["status"] = "AE"
 
         return super().create(validated_data)

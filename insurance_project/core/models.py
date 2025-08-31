@@ -62,6 +62,9 @@ class InsurancePolicy(models.Model):
         """
         current_year = datetime.now().year
 
+        if self.end_date < self.start_date:
+            raise ValidationError("End date can't be less than start date")
+
         if current_year - self.car.year <= 3:
             coefficient = 0.05
         elif 4 <= current_year - self.car.year <= 10:
